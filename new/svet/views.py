@@ -1,12 +1,21 @@
 from django.shortcuts import render
-import requests
 from django.http import JsonResponse
+import paho.mqtt.publish as publish 
 # Create your views here.
 def control(request, state, led_number):
+    topic = "ledcontrol"
+    message = str(state)
     p = f"led{led_number}{state}"
     url = f"http://192.168.1.73/{p}"
-    response = requests.get(f"http://192.168.1.73/{p}")
+    try:
+        publish.single(topic, message, hostname="host.docker.internal", port=1883)
+    except Exception as e:
+        return JsonResponse({
+            "status": "error",
+            "message": str(e)
+        })
     return JsonResponse({
         "status": "succes",
-        "response": response.text,
+        "topic": topic,
+        "message": message
     })
