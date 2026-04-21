@@ -1,8 +1,11 @@
 #include <PubSubClient.h>
 #include <WiFi.h>
-const char* ssid = "Netcraze-8361"; 
-const char* pass = "28122011";
-const char* ip = "192.168.1.59";
+const char* ssid = "123"; 
+const char* pass = "123456789";
+const char* mqtt_server = "m2.wqtt.ru";
+const int port = 19773;
+const char* mqtt_user = "u_S05TZ5";
+const char* pass_mqtt = "QBt2pRBO";
 WiFiClient espClient;
 PubSubClient client(espClient);
 void setup() {
@@ -15,7 +18,7 @@ void setup() {
     Serial.print(".");
   Serial.println(WiFi.localIP());
   }
-  client.setServer(ip, 1883);
+  client.setServer(mqtt_server, port);
   client.setCallback(receivedCallback);
 }
 
@@ -23,9 +26,9 @@ void loop() {
   // put your main code here, to run repeatedly:
   if (!client.connected()){
     String clientID = "ESPCLINET";
-    if(client.connect(clientID.c_str())){
+    if(client.connect(clientID.c_str(), mqtt_user, pass_mqtt)){
       Serial.println("подключен");
-      client.subscribe("ledcontrol/#");
+      client.subscribe("u_S05TZ5/ledcontrol/#");
     }
   }
   client.loop();

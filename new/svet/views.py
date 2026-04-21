@@ -5,10 +5,14 @@ import paho.mqtt.publish as publish
 def control(request, state, led_number):
     topic = "ledcontrol"
     message = str(state)
-    p = f"led{led_number}{state}"
-    url = f"http://192.168.1.73/{p}"
+    adress = "m2.wqtt.ru"
+    portmqtt = 19773
+    mqtt_auth = {
+        "username": "u_S05TZ5",
+        "password": "QBt2pRBO"
+    }
     try:
-        publish.single(topic, message, hostname="host.docker.internal", port=1883)
+        publish.single(f"u_S05TZ5/ledcontrol", payload=message, hostname=adress, port=portmqtt, auth=mqtt_auth)
     except Exception as e:
         return JsonResponse({
             "status": "error",
